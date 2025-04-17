@@ -1,5 +1,3 @@
-# streamlit_app.py
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -7,11 +5,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, r2_score
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 # FIRST Streamlit command
-st.set_page_config(page_title="AQI Predictor 🌎", page_icon="🌿", layout="wide")
+st.set_page_config(page_title="AQI Predictor 🌎", page_icon="🌿")
 
 # Step 1: Load the dataset
 @st.cache_data
@@ -44,33 +40,23 @@ model.fit(X_train_scaled, y_train)
 
 # Step 5: Streamlit UI
 st.title('🌎 Air Quality Index (AQI) Predictor')
+st.write('This app predicts the Air Quality Index (AQI) based on the levels of key pollutants: CO, NO2, PM2.5, and PM10.')
+st.write('AQI Categories:')
+st.write('1. **Good**: 0 - 50')
+st.write('2. **Satisfactory**: 51 - 100')
+st.write('3. **Moderate**: 101 - 150')
+st.write('4. **Poor**: 151 - 200')
+st.write('5. **Very Poor**: 201 - 300')
+st.write('6. **Severe**: 301 and above')
 
-# Add an introductory explanation about AQI and its impact
-st.write("""
-    The Air Quality Index (AQI) is a measure of how clean or polluted the air is and how it impacts your health. 
-    The higher the AQI, the greater the level of air pollution and the greater the health concern. This tool uses 
-    the concentrations of four key pollutants (CO, NO2, PM2.5, and PM10) to predict the AQI and classify it into 
-    one of the following categories:
-    
-    - **Good**: 0 - 50
-    - **Satisfactory**: 51 - 100
-    - **Moderate**: 101 - 150
-    - **Poor**: 151 - 200
-    - **Very Poor**: 201 - 300
-    - **Severe**: 301 and above
-""")
+# User Input (now only CO, NO2, PM2.5, and PM10)
+CO = st.number_input('CO (mg/m³)', min_value=0.0, value=1.5, help="Carbon Monoxide level in mg/m³")
+NO2 = st.number_input('NO2 (µg/m³)', min_value=0.0, value=25.3, help="Nitrogen Dioxide level in µg/m³")
+PM25 = st.number_input('PM2.5 (µg/m³)', min_value=0.0, value=82.5, help="PM2.5 level in µg/m³")
+PM10 = st.number_input('PM10 (µg/m³)', min_value=0.0, value=122.0, help="PM10 level in µg/m³")
 
-# User Input
-st.write("Enter the pollutant levels below to predict AQI:")
-
-# Pollutant Input Fields
-CO = st.number_input('CO (mg/m³)', min_value=0.0, value=1.5, help="Carbon Monoxide (CO) level in mg/m³")
-NO2 = st.number_input('NO2 (µg/m³)', min_value=0.0, value=25.3, help="Nitrogen Dioxide (NO2) level in µg/m³")
-PM25 = st.number_input('PM2.5 (µg/m³)', min_value=0.0, value=82.5, help="PM2.5 (Particulate Matter) level in µg/m³")
-PM10 = st.number_input('PM10 (µg/m³)', min_value=0.0, value=122.0, help="PM10 (Particulate Matter) level in µg/m³")
-
-# Prediction Button
 if st.button('Predict AQI'):
+    # Predict AQI using the model
     input_data = np.array([[CO, NO2, PM25, PM10]])
     input_scaled = scaler.transform(input_data)
     prediction = model.predict(input_scaled)[0]
@@ -89,36 +75,23 @@ if st.button('Predict AQI'):
     else:
         category = "Severe"
 
-    st.success(f'🏙️ **Predicted AQI**: {prediction:.2f} - **{category}**')
+    # Displaying the result
+    st.success(f'🏙️ Predicted AQI: {prediction:.2f} - {category}')
 
-# Optional: Model Evaluation (if needed)
+# Model Evaluation (shown in a collapsible section)
 with st.expander("Show Model Evaluation Metrics 📈"):
     y_pred = model.predict(X_test_scaled)
     st.write("Mean Absolute Error (MAE):", round(mean_absolute_error(y_test, y_pred), 2))
     st.write("R² Score:", round(r2_score(y_test, y_pred), 2))
 
-# Visualizations for Understanding the Model
-st.write("### Feature Importance")
-st.write("""
-    Below are the feature importances based on the Random Forest model. 
-    It shows how much each pollutant contributes to the AQI prediction.
+# Step 6: Display additional info about the model
+st.markdown("""
+### About the Model
+This prediction model uses a **Random Forest Regressor** to estimate the AQI based on the levels of common pollutants like **CO**, **NO2**, **PM2.5**, and **PM10**. 
+
+- **CO (Carbon Monoxide)** is a colorless, odorless gas that is harmful when inhaled in large amounts.
+- **NO2 (Nitrogen Dioxide)** is a gas that contributes to air pollution and respiratory problems.
+- **PM2.5 and PM10** are tiny particles in the air that can affect health when inhaled.
+
+This app helps predict how safe or unsafe the air is based on these pollutant levels.
 """)
-feature_importances = model.feature_importances_
-features_df = pd.DataFrame({
-    'Feature': features,
-    'Importance': feature_importances
-}).sort_values(by='Importance', ascending=False)
-
-# Plotting Feature Importance
-fig, ax = plt.subplots()
-sns.barplot(x='Importance', y='Feature', data=features_df, ax=ax, palette='viridis')
-st.pyplot(fig)
-
-# Visualizing the distribution of AQI
-st.write("### AQI Distribution in the Dataset")
-fig, ax = plt.subplots()
-sns.histplot(df[target], kde=True, ax=ax, color='skyblue', bins=30)
-ax.set_title("AQI Distribution")
-ax.set_xlabel("AQI")
-ax.set_ylabel("Frequency")
-st.pyplot(fig)
