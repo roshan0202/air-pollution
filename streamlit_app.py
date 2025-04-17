@@ -89,14 +89,12 @@ if st.button('Predict AQI'):
 
     st.success(f'🏙️ Predicted AQI: {prediction:.2f} - {category}')
 
-    # Explaining how the model works after prediction
+    # How the model works section after prediction
     st.write('### How the Model Works After Prediction')
     st.write("""
-    After the AQI prediction is made, the model uses the pollutant values provided to estimate the Air Quality Index. 
-    - The model then classifies the AQI into categories, such as **Good**, **Moderate**, or **Severe**, based on the estimated value.
-    - These categories can help individuals understand if the air quality is safe or if precautions need to be taken (e.g., wearing a mask or avoiding outdoor activities).
-    - This prediction is based on historical data of pollutant levels and their associated AQI values.
-    - The model is trained on real-world data, ensuring accurate and reliable predictions for AQI classification.
+    1. **Data**: The model was trained using pollutant levels (CO, NO2, PM2.5, PM10) and their corresponding AQI values.
+    2. **Prediction**: By entering the pollutant levels, the model processes the data and estimates the AQI, classifying it into one of the categories: Good, Satisfactory, Moderate, Poor, Very Poor, or Severe.
+    3. **Usage**: This tool is useful for anyone needing quick insights into the air quality of their surroundings based on real-time pollutant readings.
     """)
 
 # Optional: Model Evaluation (if needed)
