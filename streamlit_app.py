@@ -42,18 +42,6 @@ model.fit(X_train_scaled, y_train)
 st.title('🌎 Air Quality Index (AQI) Predictor 🌿')
 st.write('This app predicts the Air Quality Index (AQI) based on the levels of key pollutants: CO, NO2, PM2.5, and PM10.')
 
-# **About the Model** Section
-st.write('### About the Model 📊')
-st.write("""
-The **AQI Predictor** uses a **Random Forest Regressor model** to estimate the air quality index (AQI) based on the levels of four key air pollutants: 
-- **CO (Carbon Monoxide) 🚗**: A colorless and odorless gas that can harm human health when present in high concentrations.
-- **NO2 (Nitrogen Dioxide) 🚨**: A toxic gas that contributes to the formation of ground-level ozone and fine particulate matter.
-- **PM2.5 (Particulate Matter 2.5) 💨**: Tiny particles in the air that can be inhaled into the lungs, leading to various respiratory issues.
-- **PM10 (Particulate Matter 10) 💨**: Larger particles, but still harmful when inhaled, causing respiratory distress and other health concerns.
-
-This model was trained on historical data collected from various cities and uses these pollutants to estimate how safe or unsafe the air quality is for daily activities. By inputting the levels of these pollutants, the model predicts an AQI value, which helps users understand the air quality and make informed decisions regarding their health and safety.
-""")
-
 # **Input Pollutant Levels** Section
 st.write('### Input Pollutant Levels 🌫️')
 st.write('Enter the pollutant levels below to predict AQI:')
@@ -63,14 +51,6 @@ CO = st.number_input('CO (mg/m³) 🚗', min_value=0.0, value=1.5)
 NO2 = st.number_input('NO2 (µg/m³) 🚨', min_value=0.0, value=25.3)
 PM25 = st.number_input('PM2.5 (µg/m³) 💨', min_value=0.0, value=82.5)
 PM10 = st.number_input('PM10 (µg/m³) 💨', min_value=0.0, value=122.0)
-
-# **How the Model Works** Section
-st.write('### How the Model Works 🤖')
-st.write("""
-1. **Data**: The model was trained using pollutant levels (CO, NO2, PM2.5, PM10) and their corresponding AQI values.
-2. **Prediction**: By entering the pollutant levels, the model processes the data and estimates the AQI, classifying it into one of the categories: Good, Satisfactory, Moderate, Poor, Very Poor, or Severe.
-3. **Usage**: This tool is useful for anyone needing quick insights into the air quality of their surroundings based on real-time pollutant readings.
-""")
 
 # Prediction Button and Highlighted Result
 if st.button('Predict AQI 🚀'):
@@ -101,9 +81,28 @@ if st.button('Predict AQI 🚀'):
     # Highlighting the result
     st.markdown(f'<p style="font-size: 36px; color: {color}; font-weight: bold;">🏙️ Predicted AQI: {prediction:.2f} - {category}</p>', unsafe_allow_html=True)
 
+# **About the Model** Section
+st.write('### About the Model 📊')
+st.write("""
+The **AQI Predictor** uses a **Random Forest Regressor model** to estimate the air quality index (AQI) based on the levels of four key air pollutants: 
+- **CO (Carbon Monoxide) 🚗**: A colorless and odorless gas that can harm human health when present in high concentrations.
+- **NO2 (Nitrogen Dioxide) 🚨**: A toxic gas that contributes to the formation of ground-level ozone and fine particulate matter.
+- **PM2.5 (Particulate Matter 2.5) 💨**: Tiny particles in the air that can be inhaled into the lungs, leading to various respiratory issues.
+- **PM10 (Particulate Matter 10) 💨**: Larger particles, but still harmful when inhaled, causing respiratory distress and other health concerns.
+
+This model was trained on historical data collected from various cities and uses these pollutants to estimate how safe or unsafe the air quality is for daily activities. By inputting the levels of these pollutants, the model predicts an AQI value, which helps users understand the air quality and make informed decisions regarding their health and safety.
+""")
+
+# **How the Model Works** Section
+st.write('### How the Model Works 🤖')
+st.write("""
+1. **Data**: The model was trained using pollutant levels (CO, NO2, PM2.5, PM10) and their corresponding AQI values.
+2. **Prediction**: By entering the pollutant levels, the model processes the data and estimates the AQI, classifying it into one of the categories: Good, Satisfactory, Moderate, Poor, Very Poor, or Severe.
+3. **Usage**: This tool is useful for anyone needing quick insights into the air quality of their surroundings based on real-time pollutant readings.
+""")
+
 # Optional: Model Evaluation (if needed)
 with st.expander("Show Model Evaluation Metrics 📈"):
     y_pred = model.predict(X_test_scaled)
     st.write("Mean Absolute Error (MAE):", round(mean_absolute_error(y_test, y_pred), 2))
     st.write("R² Score:", round(r2_score(y_test, y_pred), 2))
-
