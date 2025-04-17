@@ -1,6 +1,11 @@
 # streamlit_app.py
 
 import streamlit as st
+
+# FIRST Streamlit command
+st.set_page_config(page_title="AQI Predictor 🌎", page_icon="🌿")
+
+# Then import everything else
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -38,7 +43,6 @@ model = RandomForestRegressor(n_estimators=100, random_state=42)
 model.fit(X_train_scaled, y_train)
 
 # Step 5: Streamlit UI
-st.set_page_config(page_title="AQI Predictor 🌎", page_icon="🌿")
 st.title('🌎 Air Quality Index (AQI) Predictor')
 st.write('Enter the pollutant levels below to predict AQI:')
 
@@ -64,3 +68,4 @@ with st.expander("Show Model Evaluation Metrics 📈"):
     y_pred = model.predict(X_test_scaled)
     st.write("Mean Absolute Error (MAE):", round(mean_absolute_error(y_test, y_pred), 2))
     st.write("R² Score:", round(r2_score(y_test, y_pred), 2))
+
