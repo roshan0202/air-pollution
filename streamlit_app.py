@@ -54,7 +54,22 @@ if st.button('Predict AQI'):
     input_data = np.array([[CO, NO2, PM25, PM10]])
     input_scaled = scaler.transform(input_data)
     prediction = model.predict(input_scaled)[0]
-    st.success(f'🏙️ Predicted AQI: {prediction:.2f}')
+
+    # Classifying AQI into categories
+    if prediction <= 50:
+        category = "Good"
+    elif prediction <= 100:
+        category = "Satisfactory"
+    elif prediction <= 150:
+        category = "Moderate"
+    elif prediction <= 200:
+        category = "Poor"
+    elif prediction <= 300:
+        category = "Very Poor"
+    else:
+        category = "Severe"
+
+    st.success(f'🏙️ Predicted AQI: {prediction:.2f} - {category}')
 
 # Optional: Model Evaluation (if needed)
 with st.expander("Show Model Evaluation Metrics 📈"):
