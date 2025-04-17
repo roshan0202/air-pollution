@@ -1,0 +1,43 @@
+import pandas as pd
+import numpy as np
+import joblib
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_absolute_error, r2_score
+
+# Load and prepare your data
+# (Your data loading code)
+
+# Define features and target
+features = ['PM2.5', 'PM10', 'NO2', 'SO2', 'CO', 'O3']
+target = 'AQI'
+
+X = df[features]
+y = df[target]
+
+# Handle missing values
+X.fillna(X.mean(), inplace=True)
+y.fillna(y.mean(), inplace=True)
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create and train model
+rf_model = RandomForestRegressor(
+    n_estimators=100,  # Or use the best params from your RandomizedSearchCV
+    max_depth=20,
+    min_samples_split=2,
+    min_samples_leaf=1,
+    random_state=42
+)
+rf_model.fit(X_train, y_train)
+
+# Evaluate
+y_pred = rf_model.predict(X_test)
+mae = mean_absolute_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+print(f"Model performance - MAE: {mae:.2f}, R²: {r2:.2f}")
+
+# Save with the exact name your app expects
+joblib.dump(rf_model, "best_rf_model.pkl")
+print("Model saved as best_rf_model.pkl")
